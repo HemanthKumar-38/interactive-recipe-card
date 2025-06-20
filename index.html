@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Chocolate Cake Recipe</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      background: url('background.jpg') no-repeat center center fixed;
+      background-size: cover;
+      color: #333;
+    }
+
+    .app-container {
+      max-width: 800px;
+      margin: auto;
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    header {
+      text-align: center;
+      background: #fce4d6;
+      padding: 20px;
+      border-radius: 10px;
+    }
+
+    .image-section img {
+      width: 100%;
+      border-radius: 10px;
+      margin-top: 10px;
+      animation: fadeIn 2s ease;
+    }
+
+    button {
+      background-color: #d2691e;
+      color: white;
+      border: none;
+      margin: 10px 5px;
+      padding: 10px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #a0522d;
+    }
+
+    .ingredients, .steps {
+      background: #fff;
+      padding: 15px;
+      border-radius: 10px;
+      margin-top: 10px;
+      transition: all 0.5s ease;
+    }
+
+    .ingredients ul li,
+    .steps ol li {
+      margin-bottom: 8px;
+      transition: transform 0.3s ease;
+    }
+
+    .steps ol li.active {
+      background: #ffe4b5;
+      transform: scale(1.05);
+    }
+
+    .progress-wrapper {
+      width: 100%;
+      background: #eee;
+      height: 10px;
+      border-radius: 10px;
+      margin-top: 20px;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: #ff7f50;
+      border-radius: 10px;
+      transition: width 0.5s ease;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .timer {
+      margin-top: 15px;
+      font-weight: bold;
+      font-size: 1.2em;
+      text-align: center;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 600px) {
+      .interactive-controls {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      button {
+        width: 100%;
+        margin: 5px 0;
+      }
+    }
+
+    body.dark {
+      background: #1e1e1e;
+      color: #f0f0f0;
+    }
+    body.dark .app-container,
+    body.dark .ingredients,
+    body.dark .steps,
+    body.dark .reviews-section {
+      background-color: #2a2a2a;
+    }
+    body.dark button {
+      background-color: #444;
+    }
+    body.dark button:hover {
+      background-color: #333;
+    }
+
+    .stars span {
+      font-size: 1.8em;
+      color: #ccc;
+      cursor: pointer;
+    }
+    .stars span.selected {
+      color: gold;
+    }
+    .reviews-section {
+      margin-top: 30px;
+      background: #fff;
+      padding: 15px;
+      border-radius: 10px;
+    }
+    .reviews-section textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+    .reviews-section ul {
+      margin-top: 10px;
+      list-style: none;
+      padding-left: 0;
+    }
+    .reviews-section ul li {
+      margin-bottom: 10px;
+      border-bottom: 1px dashed #ccc;
+      padding-bottom: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="app-container">
+    <header>
+      <h1>🍰 Chocolate Cake</h1>
+      <p>Prep Time: 45 mins | Serves: 4</p>
+    </header>
+
+    <section class="image-section">
+      <img src="chocolate-cake.jpg" alt="Chocolate Cake" />
+    </section>
+
+    <section class="interactive-controls">
+      <button onclick="toggleIngredients()">🧺 Toggle Ingredients</button>
+      <button onclick="startCooking()">🔥 Start Cooking</button>
+      <button onclick="nextStep()">➡️ Next Step</button>
+      <button onclick="stopCooking()">✅ Done Cooking</button>
+      <button onclick="resetRecipe()">🔁 Reset</button>
+      <button onclick="toggleDarkMode()">🌓 Toggle Dark Mode</button>
+    </section>
+
+    <section id="ingredients" class="ingredients hidden">
+      <h2>Ingredients</h2>
+      <ul>
+        <li>1 cup flour</li>
+        <li>1/2 cup sugar</li>
+        <li>1/3 cup cocoa powder</li>
+        <li>2 eggs</li>
+        <li>1/2 cup milk</li>
+      </ul>
+    </section>
+
+    <section id="steps" class="steps">
+      <h2>Cooking Steps</h2>
+      <ol>
+        <li>Preheat oven to 180°C.</li>
+        <li>Mix dry ingredients.</li>
+        <li>Add eggs and milk, mix well.</li>
+        <li>Pour into pan and bake 30 mins.</li>
+        <li>Let cool and serve.</li>
+      </ol>
+    </section>
+
+    <div class="progress-wrapper">
+      <div id="progress" class="progress-bar"></div>
+    </div>
+
+    <section id="timer" class="timer hidden">
+      ⏱ Timer: <span id="time">00:00</span>
+    </section>
+
+    <section class="reviews-section">
+      <h2>⭐ Rate & Review</h2>
+      <div class="stars">
+        <span onclick="rate(1)">★</span>
+        <span onclick="rate(2)">★</span>
+        <span onclick="rate(3)">★</span>
+        <span onclick="rate(4)">★</span>
+        <span onclick="rate(5)">★</span>
+      </div>
+      <textarea id="reviewText" placeholder="Leave a comment..."></textarea>
+      <button onclick="submitReview()">Submit Review</button>
+      <ul id="reviewsList"></ul>
+    </section>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
